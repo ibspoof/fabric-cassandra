@@ -3,7 +3,7 @@ from lib import *
 
 west_hosts = ['10.10.10.1']
 east_hosts = ['10.10.11.1']
-test_host = west_hosts[0]
+test_host = [west_hosts[0]]
 
 # put user used to connect with here or override in command usage
 env.user = "user"
