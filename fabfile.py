@@ -1,36 +1,36 @@
 from fabric.api import *
 from lib import *
-
-west_hosts = ['10.10.10.1']
-east_hosts = ['10.10.11.1']
-test_host = [west_hosts[0]]
-
-# put user used to connect with here or override in command usage
-env.user = "user"
-
-# enable use of a pem file by uncommenting below
-# env.key_filename = '/path/to/keyfile.pem'
-
-# If you already have all the SSH connection parameters in your ~/.ssh/config file uncomment below
-# env.use_ssh_config = True
-
-
+from conf import *
 
 @task
-def hosts(dc):
+def hosts(cluster, data_center, rack="all"):
     """
-    Set hosts to run commands on
-    :param dc:
+    Set hosts to run commands on based on cluster name, dc, and rack
+    :param cluster:
+    :param data_center:
+    :param rack:
     :return:
     """
-    if dc == "test":
+    if cluster == "test":
         env.hosts = test_host
-    if dc == "west":
-        env.hosts = west_hosts
-    if dc == "east":
-        env.hosts = east_hosts
-    if dc == "all":
-        env.hosts = west_hosts + east_hosts
+
+    if cluster not in clusters:
+        print "ERROR: Cluster %s not in cluster list in conf.py" % cluster
+        exit(1)
+
+    if data_center not in clusters[cluster]:
+        print "ERROR: Datacenter %s not in cluster %s in conf.py" % (data_center, cluster)
+        exit(1)
+
+    if rack is not "all":
+        if rack not in clusters[cluster][data_center]:
+            print "ERROR: Rack %s not in cluster %s datacenter %s in conf.py" % (rack, data_center, cluster)
+            exit(1)
+        else:
+            env.hosts = clusters[cluster][data_center][rack]
+    else:
+        for r in clusters[cluster][data_center]:
+            env.hosts.append(clusters[cluster][data_center][r])
 
     print "Hosts: " + ', '.join(env.hosts)
 
