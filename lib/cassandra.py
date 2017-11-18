@@ -139,5 +139,6 @@ def get_sed_file_cmd(replace_str, replace_with, file_path):
     replace_str = replace_str.replace('/', '\/')
     replace_with = replace_with.replace('"', r'\"')
     replace_with = replace_with.replace('/', '\/')
+    replace_with = replace_with.replace('\\', '\\\\')
 
     return "sed -i --follow-symlinks -e \"s/" + replace_str + "/" + replace_with + "/g\" " + file_path
