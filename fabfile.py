@@ -30,7 +30,7 @@ def hosts(cluster, data_center, rack="all"):
             env.hosts = clusters[cluster][data_center][rack]
     else:
         for r in clusters[cluster][data_center]:
-            env.hosts.append(clusters[cluster][data_center][r])
+            env.hosts += clusters[cluster][data_center][r]
 
     print "Hosts: " + ', '.join(env.hosts)
 
